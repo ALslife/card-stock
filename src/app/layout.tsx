@@ -23,9 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
     <html lang="ja">
       <body>
-        <header className="pt-10">
+        <header className="pt-10 pb-10">
           <h1 className="text-3xl text-center font-bold">Onepick</h1>
         </header>
         <main>

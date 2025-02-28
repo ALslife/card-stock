@@ -1,34 +1,17 @@
-import React from "react";
+import React from 'react';
 
-const InputForm: React.FC = () => {
+interface InputFormProps {
+  label: string; // ラベル用のプロパティを定義
+}
+
+const InputForm: React.FC<InputFormProps> = ({ label }) => {
   return (
-    <form className="flex flex-col space-y-4">
-      <label htmlFor="name" className="font-bold">
-        Name:
+    <div className="relative w-full">
+      <label className="absolute -top-2.5 left-1.5 px-2.5 bg-white text-[#757575]">
+        {label} {/* プロパティからラベルを表示 */}
       </label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        className="border rounded p-2"
-        required
-      />
-
-      <label htmlFor="email" className="font-bold">
-        Email:
-      </label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        className="border rounded p-2"
-        required
-      />
-
-      <button type="submit" className="bg-blue-500 text-white rounded p-2">
-        Submit
-      </button>
-    </form>
+      <input type="text" className="border border-solid border-[#BDBDBD] w-full py-5 px-4 rounded-lg" />
+    </div>
   );
 };
 
