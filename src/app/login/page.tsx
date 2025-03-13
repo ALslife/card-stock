@@ -1,16 +1,15 @@
 "use client"; // これを追加
 
-import InputForm from "./_components/input";
-import Button from "./_components/button";
+import InputForm from "../_components/input";
+import Button from "../_components/button";
 import { useState } from "react";
 
-const Home: React.FC = () => {
+const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
   const inputFields = [
-    { label: "ユーザー名", type: "text" },
     { label: "メールアドレス", type: "email" },
     { label: "パスワード", type: "password" },
   ];
@@ -49,7 +48,7 @@ const Home: React.FC = () => {
         </div>
       ))}
       <div className="pt-8">
-        <Button label="アカウント作成" color="bg-black text-white" />
+        <Button label="ログイン" color="bg-black text-white" />
       </div>
       <div className="grid grid-cols-[1fr_auto_1fr] justify-center items-center gap-4 pt-8">
         <div className="w-full border-t border-solid border-[#BDBDBD] mx-auto"></div>
@@ -57,14 +56,14 @@ const Home: React.FC = () => {
         <div className="w-full border-t border-solid border-[#BDBDBD] mx-auto"></div>
       </div>
       <div className="pt-8">
-        <Button label="Googleでサインアップ" ricon="/google.svg" color="bg-gray-200" />
+        <Button label="Googleでログイン" ricon="/google.svg" color="bg-gray-200" />
       </div>
-      <div className="pt-12 text-center">
-        <div>アカウントをお持ちですか？</div>
-        <a href="/" className="text-black underline">ログインはこちら</a>
+      <div className="flex flex-col pt-12 text-center">
+        <a href="/" className="text-black underline">アカウント作成はこちら</a>
+        <a href="/" className="text-black underline">パスワードを忘れた方はこちら</a>
       </div>
     </>
   );
 };
 
-export default Home;
+export default Login;
