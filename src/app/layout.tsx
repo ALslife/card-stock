@@ -23,13 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    
     <html lang="ja">
       <body>
         <header className="pt-10 pb-10">
           <h1 className="text-3xl text-center font-bold">Onepick</h1>
         </header>
-        <main>
+        <main className="pr-5 pl-5 mr-auto ml-auto w-full max-w-[750px]">
           {children}
         </main>
       </body>
