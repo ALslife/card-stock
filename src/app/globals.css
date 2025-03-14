@@ -19,3 +19,23 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+
+}
+
+.select-wrap::after {
+  content: '';
+  background-image: url('/arrow.svg'); /* アイコンのパス */
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  right: 1.25rem; /* アイコンの位置 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px; /* アイコンの幅 */
+  height: 20px; /* アイコンの高さ */
+}

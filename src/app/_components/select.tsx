@@ -2,7 +2,12 @@ import React from 'react'
 
 const select = () => {
   return (
-    <select className="relative w-full border border-solid border-[#BDBDBD] py-5 px-4 rounded-lg">
+    <div className="relative w-full select-wrap">
+      <select className="relative w-full border border-solid border-[#BDBDBD] py-5 px-4 rounded-lg">
+        <option value="">ALL</option>
+        <option value="">プレミアムブースター ONE PIECE CARD THE BEST【PRB-01】</option>
+        <option value="">エクストラブースター Anime 25th collection【EB-02】</option>
+        <option value="">エクストラブースター メモリアルコレクション【EB-01】</option>
         <option value="">ブースターパック 神速の拳【OP-11】</option>
         <option value="">ブースターパック 王族の血統【OP-10】</option>
         <option value="">ブースターパック 新たなる皇帝【OP-09】</option>
@@ -29,7 +34,16 @@ const select = () => {
         <option value="">スタートデッキ Side ヤマト【ST-09】</option>
         <option value="">スタートデッキ Side モンキー・D・ルフィ【ST-08】</option>
         <option value="">スタートデッキ ビッグ・マム海賊団【ST-07】</option>
-    </select>
+        <option value="">スタートデッキ 海軍【ST-06】</option>
+        <option value="">スタートデッキ ONE PIECE FILM edition【ST-05】</option>
+        <option value="">スタートデッキ 百獣海賊団【ST-04】</option>
+        <option value="">スタートデッキ 王下七武海【ST-03】</option>
+        <option value="">スタートデッキ 最悪の世代【ST-02】</option>
+        <option value="">スタートデッキ 麦わらの一味【ST-01】</option>
+        <option value="">プロモーションカード</option>
+        <option value="">限定商品収録カード</option>
+      </select>
+    </div>
   )
 }
 
