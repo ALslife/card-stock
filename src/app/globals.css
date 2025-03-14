@@ -39,3 +39,28 @@ select {
   width: 20px; /* アイコンの幅 */
   height: 20px; /* アイコンの高さ */
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  margin: 1.25rem;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.modal-image {
+  width: 70%;
+  max-width: 300px;
+  height: auto;
+}

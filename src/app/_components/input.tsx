@@ -3,9 +3,11 @@ interface InputFormProps {
   label?: string; // ラベル用のプロパティを定義
   type: string;
   placeholder?: string;
+  value: string; // valueを追加
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // onChangeを追加
 }
 
-const InputForm: React.FC<InputFormProps> = ({ label, type, placeholder }) => {
+const InputForm: React.FC<InputFormProps> = ({ label, type, placeholder,value, onChange }) => {
   return (
     <div className="relative w-full">
       {label && (
@@ -15,6 +17,8 @@ const InputForm: React.FC<InputFormProps> = ({ label, type, placeholder }) => {
       )}
       <input type={type} className="border border-solid border-[#BDBDBD] w-full py-5 px-4 rounded-lg"
       placeholder={placeholder || ''} 
+      value={value} // ここでvalueを設定
+      onChange={onChange} // onChangeも渡す
       />
     </div>
   );
