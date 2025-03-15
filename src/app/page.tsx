@@ -1,19 +1,57 @@
 "use client"; // これを追加
 
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import InputForm from "./_components/input";
 import Button from "./_components/button";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Home: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false); // ローディング状態の管理
+
+  // ログイン中のステータス表示
+  useEffect(() => {
+    if (status === "loading") {
+      setIsLoading(true); // ローディング中は isLoading を true に保つ
+      return; // ローディング中は何もしない
+    }
+
+    // ローディングが完了したら isLoading を false に設定
+    setIsLoading(false); 
+
+    if (session) {
+      router.push("/search"); // サインインしていれば /search に遷移
+    }
+  }, [session, status, router]);
+
+  // パスワード表示のトグル
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
   const inputFields = [
     { label: "ユーザー名", type: "text" },
-    { label: "メールアドレス", type: "email" },
-    { label: "パスワード", type: "password" },
+    { label: "パスワード", type: "password" },
   ];
+
+  // ログイン中の場合はフォームは表示しない
+  if (session) {
+    return null; // sessionがある場合は何も表示しない
+  }
+
+  // ログイン中の場合は「ログイン中...」を表示
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div>ログイン中...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -30,9 +68,7 @@ const Home: React.FC = () => {
         >
           <InputForm
             label={field.label}
-            type={
-              field.type === "password" && showPassword ? "text" : field.type
-            }
+            type={field.type === "password" && showPassword ? "text" : field.type}
           />
           {field.type === "password" && (
             <button
@@ -40,28 +76,26 @@ const Home: React.FC = () => {
               className="absolute right-5 top-5"
             >
               {showPassword ? (
-                <img src="/eye_close_fill.svg" />
+                <img src="/eye_close_fill.svg" alt="Hide password" />
               ) : (
-                <img src="/eye_fill.svg" />
+                <img src="/eye_fill.svg" alt="Show password" />
               )}
             </button>
           )}
         </div>
       ))}
+
       <div className="pt-8">
-        <Button label="アカウント作成" color="bg-black text-white" />
-      </div>
-      <div className="grid grid-cols-[1fr_auto_1fr] justify-center items-center gap-4 pt-8">
-        <div className="w-full border-t border-solid border-[#BDBDBD] mx-auto"></div>
-        <div className="mx-auto">または</div>
-        <div className="w-full border-t border-solid border-[#BDBDBD] mx-auto"></div>
-      </div>
-      <div className="pt-8">
-        <Button label="Googleでサインアップ" ricon="/google.svg" color="bg-gray-200" />
-      </div>
-      <div className="pt-12 text-center">
-        <div>アカウントをお持ちですか？</div>
-        <a href="/" className="text-black underline">ログインはこちら</a>
+        <Button
+          label={isGoogleSignInLoading ? "Googleでサインイン中..." : "Googleでサインイン"}
+          ricon="/google.svg"
+          color="bg-gray-200"
+          onClick={async () => {
+            setIsGoogleSignInLoading(true); // サインイン中の状態をセット
+            const result = await signIn("google", { redirect: false }); // redirect: false に設定
+            setIsGoogleSignInLoading(false); // サインイン終了後、状態をリセット
+          }}
+        />
       </div>
     </>
   );

@@ -91,7 +91,7 @@ const Search: React.FC = () => {
           <div className="py-8 text-2xl">HIT数: {filteredCards.length}件</div>
           <div className="grid grid-cols-3 gap-4">
             {filteredCards.slice(0, cardCount).map((card) => (
-              <Card key={card.id} ImgUrl={card.imgUrl} />
+              <Card key={card.id} ImgUrl={card.imgUrl} cardId={card.id} />
             ))}
           </div>
         </>
