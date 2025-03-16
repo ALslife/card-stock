@@ -6,7 +6,6 @@ import Button from "./_components/button";
 import { useRouter } from "next/navigation";
 
 const Home: React.FC = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
