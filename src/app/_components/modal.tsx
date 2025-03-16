@@ -160,9 +160,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
         <Button
           label="変更"
           color="bg-red-500 text-white"
-          onClick={() => {
-            saveData();
-            onClose();
+          onClick={async () => {
+            await saveData(); // データを保存
+            onClose(); // モーダルを閉じる
           }}
         />
       </div>
