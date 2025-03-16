@@ -18,37 +18,39 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
   useEffect(() => {
     if (isOpen) {
       console.log("Current cardId:", cardId); // ここでcardIdを確認
-      // ローカルストレージから数量を取得
-      const savedBagQuantity = localStorage.getItem(
-        `user_${session.user.email}_bagQuantity_${cardId}`
-      );
-      const savedHeartQuantity = localStorage.getItem(
-        `user_${session.user.email}_heartQuantity_${cardId}`
-      );
-      if (savedBagQuantity) setBagQuantity(Number(savedBagQuantity));
-      if (savedHeartQuantity) setHeartQuantity(Number(savedHeartQuantity));
+      if (session && session.user) {
+        // ローカルストレージから数量を取得
+        const savedBagQuantity = localStorage.getItem(
+          `user_${session.user.email}_bagQuantity_${cardId}`
+        );
+        const savedHeartQuantity = localStorage.getItem(
+          `user_${session.user.email}_heartQuantity_${cardId}`
+        );
+        if (savedBagQuantity) setBagQuantity(Number(savedBagQuantity));
+        if (savedHeartQuantity) setHeartQuantity(Number(savedHeartQuantity));
 
-      if (session && session.user?.id) {
-        // サインインしたユーザーのデータを取得
-        const loadData = async () => {
-          const response = await fetch(`/api/user/${session.user.id}`);
-          const data = await response.json();
-          const userCardData = data.cardData.find(
-            (card: string) => card.cardId === cardId
-          );
-          if (userCardData) {
-            setBagQuantity(userCardData.bagQuantity);
-            setHeartQuantity(userCardData.heartQuantity);
-          }
-        };
-        loadData();
+        if (session.user.email) {
+          // サインインしたユーザーのデータを取得
+          const loadData = async () => {
+            const response = await fetch(`/api/user/${session.user.email}`);
+            const data = await response.json();
+            const userCardData = data.cardData.find(
+              (card: string) => card.cardId === cardId
+            );
+            if (userCardData) {
+              setBagQuantity(userCardData.bagQuantity);
+              setHeartQuantity(userCardData.heartQuantity);
+            }
+          };
+          loadData();
+        }
       }
     }
   }, [session, cardId, isOpen]);
 
   const saveData = async () => {
-    if (session && session.user?.id) {
-      await fetch(`/api/user/${session.user.id}`, {
+    if (session && session.user?.email) {
+      await fetch(`/api/user/${session.user.email}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,17 +59,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
           cardData: { cardId, bagQuantity, heartQuantity },
         }),
       });
+      // ユーザーIDを含めたキーでローカルストレージに数量を保存
+      localStorage.setItem(
+        `user_${session.user.email}_bagQuantity_${cardId}`,
+        bagQuantity.toString()
+      );
+      localStorage.setItem(
+        `user_${session.user.email}_heartQuantity_${cardId}`,
+        heartQuantity.toString()
+      );
     }
-    console.log(session.user.id);
-    // ユーザーIDを含めたキーでローカルストレージに数量を保存
-    localStorage.setItem(
-      `user_${session.user.email}_bagQuantity_${cardId}`,
-      bagQuantity.toString()
-    );
-    localStorage.setItem(
-      `user_${session.user.email}_heartQuantity_${cardId}`,
-      heartQuantity.toString()
-    );
   };
 
   const increaseBagQuantity = () => setBagQuantity((prev) => prev + 1);

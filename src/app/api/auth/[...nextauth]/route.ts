@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-export const authOptions = {
+const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -12,9 +12,7 @@ export const authOptions = {
     signIn: "/auth/signin", // カスタムログインページ（オプション）
   },
   callbacks: {
-    // リダイレクト先を指定
     async redirect({ url, baseUrl }) {
-      // Google認証後に `/search` ページにリダイレクト
       if (url === "/auth/signin") {
         return `${baseUrl}/search`; // `/search` ページにリダイレクト
       }
@@ -23,5 +21,8 @@ export const authOptions = {
   },
 };
 
+// NextAuthのハンドラーを作成
 const handler = NextAuth(authOptions);
+
+// GETおよびPOSTリクエスト用にハンドラーをエクスポート
 export { handler as GET, handler as POST };
