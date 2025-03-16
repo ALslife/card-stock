@@ -40,9 +40,9 @@ const Login: React.FC = () => {
               className="absolute right-5 top-5"
             >
               {showPassword ? (
-                <Image src="/eye_close_fill.svg" />
+                <Image width={24} height={24} src="/eye_close_fill.svg" />
               ) : (
-                <Image src="/eye_fill.svg" />
+                <Image width={24} height={24} src="/eye_fill.svg" />
               )}
             </button>
           )}

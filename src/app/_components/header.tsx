@@ -26,6 +26,8 @@ const Header = () => {
             <div className="flex items-center">
               {session.user?.image && (
                 <Image
+                  width={32}
+                  height={32}
                   src={session.user.image}
                   alt="ユーザーアバター"
                   className="w-8 h-8 rounded-full cursor-pointer"
