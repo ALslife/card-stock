@@ -43,7 +43,7 @@ const Search: React.FC = () => {
           card.name.includes(searchText) &&
           (selectedOption === "" || card.type === selectedOption)
       )
-      .sort((a, b) => a.No.localeCompare(b.No)); // Noフィールドで昇順ソート
+      .sort((a, b) => parseInt(a.No) - parseInt(b.No)); // Noフィールドで昇順ソート
 
     setFilteredCards(result);
     setCardCount(6);
