@@ -12,13 +12,13 @@ const authOptions = {
     signIn: "/auth/signin", // カスタムログインページ（オプション）
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) { // baseUrlを追加
       if (url === "/auth/signin") {
         return `${baseUrl}/search`; // `/search` ページにリダイレクト
       }
-      return url; // その他のリダイレクトの場合はそのまま
-    },
-  },
+      return url; // デフォルトのリダイレクト
+    }
+  }
 };
 
 // NextAuthのハンドラーを作成

@@ -10,6 +10,12 @@ interface ModalProps {
   cardId: string; // 各カードを識別するためのIDを追加
 }
 
+interface UserCardData {
+  cardId: string;
+  bagQuantity: number;
+  heartQuantity: number;
+}
+
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
   const { data: session } = useSession(); // セッション情報を取得
   const [bagQuantity, setBagQuantity] = useState<number>(0);
@@ -29,21 +35,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
         if (savedBagQuantity) setBagQuantity(Number(savedBagQuantity));
         if (savedHeartQuantity) setHeartQuantity(Number(savedHeartQuantity));
 
-        if (session.user.email) {
-          // サインインしたユーザーのデータを取得
-          const loadData = async () => {
+        // サインインしたユーザーのデータを取得
+        const loadData = async () => {
+          if (session && session.user && session.user.email) {
+            // sessionとsession.userの存在を確認
             const response = await fetch(`/api/user/${session.user.email}`);
             const data = await response.json();
-            const userCardData = data.cardData.find(
-              (card: string) => card.cardId === cardId
+            const userCardData: UserCardData | undefined = data.cardData.find(
+              (card: UserCardData) => card.cardId === cardId // UserCardData型を指定
             );
             if (userCardData) {
               setBagQuantity(userCardData.bagQuantity);
               setHeartQuantity(userCardData.heartQuantity);
             }
-          };
-          loadData();
-        }
+          }
+        };
+        loadData();
       }
     }
   }, [session, cardId, isOpen]);
