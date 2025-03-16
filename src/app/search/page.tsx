@@ -11,6 +11,7 @@ interface CardType {
   name: string;
   type: string;
   imgUrl: string;
+  No: string;
 }
 
 const Search: React.FC = () => {
@@ -34,16 +35,19 @@ const Search: React.FC = () => {
     fetchCards();
   }, []);
 
-// 🔹 検索処理
-useEffect(() => {
-  const result = cards.filter(
-    (card) =>
-      card.name.includes(searchText) &&
-      (selectedOption === "" || card.type === selectedOption)
-  );
-  setFilteredCards(result);
-  setCardCount(6);
-}, [searchText, selectedOption, cards]); 
+  // 🔹 検索処理
+  useEffect(() => {
+    const result = cards
+      .filter(
+        (card) =>
+          card.name.includes(searchText) &&
+          (selectedOption === "" || card.type === selectedOption)
+      )
+      .sort((a, b) => a.No.localeCompare(b.No)); // Noフィールドで昇順ソート
+
+    setFilteredCards(result);
+    setCardCount(6);
+  }, [searchText, selectedOption, cards]);
 
   // 🔹 スクロール時に追加表示
   useEffect(() => {

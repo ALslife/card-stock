@@ -15,7 +15,9 @@ datasource db {
 
 model Card {
   id     Int    @id @default(autoincrement())
+  No     String
   name   String
   type   String
   imgUrl String
+  Block  Int
 }
