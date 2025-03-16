@@ -1,22 +1,8 @@
 "use client"; // クライアントコンポーネント
 
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/header";
 import { SessionProvider } from "next-auth/react"; // ✅ 追加
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-
 
 export default function RootLayout({
   children,

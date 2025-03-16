@@ -9,11 +9,6 @@ const Header = () => {
   const { data: session } = useSession();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/");
-  };
-
   return (
     <>
       <header

@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
           const response = await fetch(`/api/user/${session.user.id}`);
           const data = await response.json();
           const userCardData = data.cardData.find(
-            (card: any) => card.cardId === cardId
+            (card: string) => card.cardId === cardId
           );
           if (userCardData) {
             setBagQuantity(userCardData.bagQuantity);
