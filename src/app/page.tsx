@@ -6,6 +6,7 @@ import Button from "./_components/button";
 import { useRouter } from "next/navigation";
 
 const Home: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [isGoogleSignInLoading, setIsGoogleSignInLoading] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -51,7 +52,7 @@ const Home: React.FC = () => {
           color="bg-gray-200"
           onClick={async () => {
             setIsGoogleSignInLoading(true); // サインイン中の状態をセット
-            const result = await signIn("google", { redirect: false }); // redirect: false に設定
+            await signIn("google", { redirect: false });
             setIsGoogleSignInLoading(false); // サインイン終了後、状態をリセット
           }}
         />
