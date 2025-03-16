@@ -29,15 +29,6 @@ const Home: React.FC = () => {
     }
   }, [session, status, router]);
 
-  // パスワード表示のトグル
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
-  const inputFields = [
-    { label: "ユーザー名", type: "text" },
-    { label: "パスワード", type: "password" },
-  ];
 
   // ログイン中の場合はフォームは表示しない
   if (session) {
@@ -55,36 +46,6 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {inputFields.map((field, index) => (
-        <div
-          key={index}
-          className={
-            field.type === "password"
-              ? `relative ${index < inputFields.length - 1 ? "mb-8" : ""}`
-              : index < inputFields.length - 1
-              ? "mb-8"
-              : ""
-          }
-        >
-          <InputForm
-            label={field.label}
-            type={field.type === "password" && showPassword ? "text" : field.type}
-          />
-          {field.type === "password" && (
-            <button
-              onClick={togglePasswordVisibility}
-              className="absolute right-5 top-5"
-            >
-              {showPassword ? (
-                <img src="/eye_close_fill.svg" alt="Hide password" />
-              ) : (
-                <img src="/eye_fill.svg" alt="Show password" />
-              )}
-            </button>
-          )}
-        </div>
-      ))}
-
       <div className="pt-8">
         <Button
           label={isGoogleSignInLoading ? "Googleでサインイン中..." : "Googleでサインイン"}

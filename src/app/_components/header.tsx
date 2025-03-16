@@ -1,34 +1,42 @@
 "use client"; // クライアントコンポーネント
 
 import { useSession, signOut } from "next-auth/react";
+import { useState } from "react";
+import LogoutModal from "./logoutModal";
 import { useRouter } from "next/navigation"; // useRouter をインポート
 
 const Header = () => {
-  const { data: session } = useSession();  // セッション情報を取得
-  const router = useRouter(); // useRouter を使用してルーターを取得
+  const { data: session } = useSession();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const handleLogout = async () => {
-    await signOut({ redirect: false }); // リダイレクトを無効にする
-    router.push("/"); // ログアウト後にルートにリダイレクト
+    await signOut({ redirect: false });
+    router.push("/");
   };
 
   return (
-    <header className="pt-10 pb-10 flex justify-between items-center px-5">
-      <h1 className="text-3xl font-bold">Onepick</h1>
-      {session ? (
-        <div className="flex items-center gap-4">
-          <p className="text-gray-700">ログイン中: {session.user?.name}</p>
-          <button
-            onClick={handleLogout} // handleLogout を呼び出す
-            className="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            ログアウト
-          </button>
-        </div>
-      ) : (
-        <p className="text-gray-500">ログインしていません</p>
-      )}
-    </header>
+    <>
+      <header
+        className={`pt-10 pb-10 flex ${session ? "justify-between" : "justify-center"} items-center px-5`}
+        onClick={() => session && setIsLogoutModalOpen(true)}
+      >
+        <h1 className="text-3xl font-bold">Onepick</h1>
+        {session ? (
+          <div>
+            <div className="flex items-center">
+              {session.user?.image && (
+                <img
+                  src={session.user.image}
+                  alt="ユーザーアバター"
+                  className="w-8 h-8 rounded-full cursor-pointer"
+                />
+              )}
+            </div>
+          </div>
+        ) : null}
+      </header>
+      <LogoutModal isOpen={isLogoutModalOpen} onClose={() => setIsLogoutModalOpen(false)} />
+    </>
   );
 };
 
