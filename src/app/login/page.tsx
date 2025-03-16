@@ -3,6 +3,7 @@
 import InputForm from "../_components/input";
 import Button from "../_components/button";
 import { useState } from "react";
+import Image from 'next/image';
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,9 +40,9 @@ const Login: React.FC = () => {
               className="absolute right-5 top-5"
             >
               {showPassword ? (
-                <img src="/eye_close_fill.svg" />
+                <Image src="/eye_close_fill.svg" />
               ) : (
-                <img src="/eye_fill.svg" />
+                <Image src="/eye_fill.svg" />
               )}
             </button>
           )}

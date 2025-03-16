@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import LogoutModal from "./logoutModal";
-import { useRouter } from "next/navigation"; // useRouter をインポート
+import Image from 'next/image';
 
 const Header = () => {
   const { data: session } = useSession();
@@ -25,7 +25,7 @@ const Header = () => {
           <div>
             <div className="flex items-center">
               {session.user?.image && (
-                <img
+                <Image
                   src={session.user.image}
                   alt="ユーザーアバター"
                   className="w-8 h-8 rounded-full cursor-pointer"

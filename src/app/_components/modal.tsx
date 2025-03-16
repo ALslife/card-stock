@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from './button';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 interface ModalProps {
   isOpen: boolean;
@@ -70,12 +71,12 @@ localStorage.setItem(`user_${session.user.email}_heartQuantity_${cardId}`, heart
     <div className={modalClass} onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-center pt-8">
-          <img src={ImgUrl} alt="" className="modal-image border-radius rounded-lg" />
+          <Image src={ImgUrl} alt="" className="modal-image border-radius rounded-lg" />
         </div>
         <div className="flex justify-center pt-8 gap-8">
-          <img src="/bag.svg" alt="" className="w-12 h-12" />
+          <Image src="/bag.svg" alt="" className="w-12 h-12" />
           <button onClick={decreaseBagQuantity} className="flex justify-center px-3 bg-black w-12 h-12 rounded-lg">
-            <img src="/minus.svg" alt="" />
+            <Image src="/minus.svg" alt="" />
           </button>
           <input
             type="number"
@@ -84,14 +85,14 @@ localStorage.setItem(`user_${session.user.email}_heartQuantity_${cardId}`, heart
             readOnly
           />
           <button onClick={increaseBagQuantity} className="flex justify-center px-2 bg-black w-12 h-12 rounded-lg">
-            <img src="/plus.svg" alt="" />
+            <Image src="/plus.svg" alt="" />
           </button>
         </div>
 
         <div className="flex justify-center py-8 gap-8">
-          <img src="/heart.svg" alt="" className="w-12 h-12" />
+          <Image src="/heart.svg" alt="" className="w-12 h-12" />
           <button onClick={decreaseHeartQuantity} className="flex justify-center px-3 bg-black w-12 h-12 rounded-lg">
-            <img src="/minus.svg" alt="" />
+            <Image src="/minus.svg" alt="" />
           </button>
           <input
             type="number"
@@ -100,7 +101,7 @@ localStorage.setItem(`user_${session.user.email}_heartQuantity_${cardId}`, heart
             readOnly
           />
           <button onClick={increaseHeartQuantity} className="flex justify-center px-2 bg-black w-12 h-12 rounded-lg">
-            <img src="/plus.svg" alt="" />
+            <Image src="/plus.svg" alt="" />
           </button>
         </div>
         <Button label="変更" color="bg-red-500 text-white" onClick={() => { saveData(); onClose(); }} />

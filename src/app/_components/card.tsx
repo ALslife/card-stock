@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from './modal';
+import Image from 'next/image';
 
 interface CardProps {
   ImgUrl: string; 
@@ -30,7 +31,7 @@ const Card: React.FC<CardProps> = ({ ImgUrl, cardId }) => {
   }, [isModalOpen]);
   return (
     <>
-      <img src={ImgUrl} alt="" className='border-radius rounded-lg cursor-pointer' loading="lazy" onClick={handleCardClick} />
+      <Image  src={ImgUrl} alt="" className='border-radius rounded-lg cursor-pointer' loading="lazy" onClick={handleCardClick} />
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} ImgUrl={ImgUrl} cardId={cardId} />
     </>
   );
