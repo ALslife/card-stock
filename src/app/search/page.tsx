@@ -20,7 +20,6 @@ const Search: React.FC = () => {
   const [showResults, setShowResults] = useState(true); // 初期表示をtrueに設定
   const [cards, setCards] = useState<CardType[]>([]); // 型を指定
   const [filteredCards, setFilteredCards] = useState<CardType[]>([]); // 型を指定
-  const [cardCount, setCardCount] = useState(6);
 
   // 🔹 APIからデータ取得
   useEffect(() => {
@@ -46,19 +45,7 @@ const Search: React.FC = () => {
       .sort((a, b) => parseInt(a.No) - parseInt(b.No)); // Noフィールドで昇順ソート
 
     setFilteredCards(result);
-    setCardCount(6);
   }, [searchText, selectedOption, cards]);
-
-  // 🔹 スクロール時に追加表示
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        setCardCount((prev) => Math.min(prev + 3, filteredCards.length));
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [filteredCards]);
 
   return (
     <>
@@ -94,7 +81,6 @@ const Search: React.FC = () => {
               (selectedOption === "" || card.type === selectedOption)
           );
           setFilteredCards(result);
-          setCardCount(6);
           setShowResults(true); // 検索後に結果を表示する状態を更新
         }}
       />
@@ -102,7 +88,7 @@ const Search: React.FC = () => {
         <>
           <div className="py-8 text-2xl">HIT数: {filteredCards.length}件</div>
           <div className="grid grid-cols-3 gap-4">
-            {filteredCards.slice(0, cardCount).map((card) => (
+            {filteredCards.map((card) => (
               <Card key={card.id} ImgUrl={card.imgUrl} cardId={card.id} />
             ))}
           </div>
