@@ -27,20 +27,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
           // APIリクエストパスをログに出力
           const requestUrl = `/api/cards/${cardId}?userId=${userId}`;
           console.log(`APIリクエスト: ${requestUrl}`);
-          
+
           const response = await fetch(requestUrl);
-          
+
           if (!response.ok) {
             const errorText = await response.text();
             console.error(`APIエラーステータス: ${response.status}`, errorText);
             throw new Error(`APIエラー: ${response.status}`);
           }
-          
+
           const contentType = response.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) {
             throw new Error("JSONレスポンスではありません");
           }
-          
+
           const data = await response.json();
           console.log("取得データ:", data);
           if (data) {
@@ -65,28 +65,35 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
       setIsSaving(true);
       setSaveMessage("");
       console.log("送信データ:", data);
-      
-      const response = await fetch('/api/cards/update', {
-        method: 'POST',
+
+      const response = await fetch("/api/cards/update", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`エラーレスポンス: ${response.status}`, errorText);
         setSaveMessage("更新に失敗しました");
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const result = await response.json();
       console.log("成功レスポンス:", result);
+
       setSaveMessage("更新しました！");
+      // 1秒後にモーダルを閉じる
+      setTimeout(() => {
+        onClose(); // onClose関数を呼び出す
+        setSaveMessage("");
+      }, 500);
+
       return result;
     } catch (error) {
-      console.error('カードデータ更新エラー:', error);
+      console.error("カードデータ更新エラー:", error);
       setSaveMessage("更新に失敗しました");
       throw error;
     } finally {
@@ -110,15 +117,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
       setSaveMessage("ユーザーIDまたはカードIDが不明です");
       return;
     }
-    
+
     // 必要なデータだけを含むオブジェクトを作成
     const data = {
       cardId: cardId,
       userId: userId,
       bagQuantity: bagQuantity,
-      heartQuantity: heartQuantity
+      heartQuantity: heartQuantity,
     };
-    
+
     try {
       await saveData(data);
       // 成功時の処理（すでにsetSaveMessageで処理されています）
@@ -128,26 +135,25 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
   };
 
   return (
-    <div className={modalClass} onClick={onClose}>
+    <div className={modalClass} >
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="flex justify-center pt-8">
+        <div className="flex justify-center">
           <Image
             src={ImgUrl}
-            layout="responsive"
-            width={1}
-            height={1}
+            width={1000}
+            height={1000}
             alt=""
             className="modal-image border-radius rounded-lg"
           />
         </div>
-        
+
         {isLoading ? (
-          <div className="flex justify-center py-8">
+          <div className="flex justify-center py-4">
             <p>データを読み込み中...</p>
           </div>
         ) : (
           <>
-            <div className="flex justify-center pt-8 gap-8">
+            <div className="flex justify-center pt-4 gap-8">
               <Image
                 width={24}
                 height={24}
@@ -157,9 +163,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
               />
               <button
                 onClick={decreaseBagQuantity}
-                className="flex justify-center px-3 bg-black w-12 h-12 rounded-lg"
+                className="flex justify-center align-center px-3 bg-black w-12 h-12 rounded-lg"
               >
-                <Image width={24} height={24} src="/minus.svg" alt="" />
+                <Image
+                  width={24}
+                  height={24}
+                  src="/minus.svg"
+                  alt=""
+                  className="w-auto h-auto"
+                />
               </button>
               <input
                 type="number"
@@ -169,13 +181,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
               />
               <button
                 onClick={increaseBagQuantity}
-                className="flex justify-center px-2 bg-black w-12 h-12 rounded-lg"
+                className="flex justify-center align-center px-2 bg-black w-12 h-12 rounded-lg"
               >
-                <Image width={24} height={24} src="/plus.svg" alt="" />
+                <Image
+                  width={24}
+                  height={24}
+                  src="/plus.svg"
+                  alt=""
+                  className="w-auto h-auto"
+                />
               </button>
             </div>
 
-            <div className="flex justify-center py-8 gap-8">
+            <div className="flex justify-center py-4 gap-8">
               <Image
                 width={24}
                 height={24}
@@ -185,9 +203,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
               />
               <button
                 onClick={decreaseHeartQuantity}
-                className="flex justify-center px-3 bg-black w-12 h-12 rounded-lg"
+                className="flex justify-center align-center px-3 bg-black w-12 h-12 rounded-lg"
               >
-                <Image width={24} height={24} src="/minus.svg" alt="" />
+                <Image
+                  width={24}
+                  height={24}
+                  src="/minus.svg"
+                  alt=""
+                  className="w-auto h-auto"
+                />
               </button>
               <input
                 type="number"
@@ -197,16 +221,26 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
               />
               <button
                 onClick={increaseHeartQuantity}
-                className="flex justify-center px-2 bg-black w-12 h-12 rounded-lg"
+                className="flex justify-center align-center px-2 bg-black w-12 h-12 rounded-lg"
               >
-                <Image width={24} height={24} src="/plus.svg" alt="" />
+                <Image
+                  width={24}
+                  height={24}
+                  src="/plus.svg"
+                  alt=""
+                  className="w-auto h-auto"
+                />
               </button>
             </div>
           </>
         )}
-        
+
         {saveMessage && (
-          <div className={`text-center my-2 ${saveMessage.includes('失敗') ? 'text-red-500' : 'text-green-500'}`}>
+          <div
+            className={`text-center my-2 ${
+              saveMessage.includes("失敗") ? "text-red-500" : "text-green-500"
+            }`}
+          >
             {saveMessage}
           </div>
         )}

@@ -31,16 +31,17 @@ const Card: React.FC<CardProps> = ({ ImgUrl, cardId }) => {
   }, [isModalOpen]);
   return (
     <>
+      <div style={{width: '100%' }}>
         <Image 
-    layout="responsive" 
-    width={1} // 幅の比率を保つために1を指定
-    height={1} // 高さの比率を保つために1を指定
+          width={1000} // 幅の比率を保つために1を指定
+          height={1000} // 高さの比率を保つために1を指定
           src={ImgUrl} 
           alt="" 
           className='border-radius rounded-lg cursor-pointer' 
           onClick={handleCardClick}
           priority
         />
+      </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} ImgUrl={ImgUrl} cardId={cardId} />
     </>
   );
