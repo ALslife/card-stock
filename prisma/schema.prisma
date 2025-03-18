@@ -13,11 +13,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id    String @id @unique
+  email String @unique
+  name  String
+  image String?
+  Cards UserCard[]
+}
+
 model Card {
-  id     Int    @id @default(autoincrement())
-  No     String
-  name   String
-  type   String
+  id    Int    @id @default(autoincrement())
+  No    String
+  name  String
+  type  String
   imgUrl String
-  Block  Int
+  Block Int
+  Users UserCard[]
+}
+
+model UserCard {
+  id            Int    @id @default(autoincrement())
+  userId        String
+  cardId        Int
+  bagQuantity   Int    @default(0)
+  heartQuantity Int    @default(0)
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardId]) // ユーザーとカードの組み合わせは一意
 }

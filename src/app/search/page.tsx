@@ -5,7 +5,6 @@ import Select from "../_components/select";
 import Card from "../_components/card";
 import Button from "../_components/button";
 
-// カードの型を定義
 interface CardType {
   id: string;
   name: string;
@@ -17,24 +16,28 @@ interface CardType {
 const Search: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedOption, setSelectedOption] = useState("OP-11");
-  const [showResults, setShowResults] = useState(true); // 初期表示をtrueに設定
-  const [cards, setCards] = useState<CardType[]>([]); // 型を指定
-  const [filteredCards, setFilteredCards] = useState<CardType[]>([]); // 型を指定
+  const [showResults, setShowResults] = useState(true);
+  const [cards, setCards] = useState<CardType[]>([]);
+  const [filteredCards, setFilteredCards] = useState<CardType[]>([]);
 
-  // 🔹 APIからデータ取得
   useEffect(() => {
     const fetchCards = async () => {
-      const res = await fetch("/api/cards");
-      const data: CardType[] = await res.json(); // 型を指定
-      setCards(data);
-      // 初期状態でtypeが"OP-11"のカードだけを表示
-      const initialFilteredCards = data.filter(card => card.type === "OP-11");
-      setFilteredCards(initialFilteredCards);
+      try {
+        const res = await fetch("/api/cards");
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data: CardType[] = await res.json();
+        setCards(data);
+        const initialFilteredCards = data.filter(card => card.type === "OP-11");
+        setFilteredCards(initialFilteredCards);
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      }
     };
     fetchCards();
   }, []);
 
-  // 🔹 検索処理
   useEffect(() => {
     const result = cards
       .filter(
@@ -42,7 +45,7 @@ const Search: React.FC = () => {
           card.name.includes(searchText) &&
           (selectedOption === "" || card.type === selectedOption)
       )
-      .sort((a, b) => parseInt(a.No) - parseInt(b.No)); // Noフィールドで昇順ソート
+      .sort((a, b) => parseInt(a.No) - parseInt(b.No));
 
     setFilteredCards(result);
   }, [searchText, selectedOption, cards]);
@@ -81,10 +84,10 @@ const Search: React.FC = () => {
               (selectedOption === "" || card.type === selectedOption)
           );
           setFilteredCards(result);
-          setShowResults(true); // 検索後に結果を表示する状態を更新
+          setShowResults(true);
         }}
       />
-      {showResults && ( // showResultsがtrueのときのみ表示
+      {showResults && (
         <>
           <div className="py-8 text-2xl">HIT数: {filteredCards.length}件</div>
           <div className="grid grid-cols-3 gap-4">

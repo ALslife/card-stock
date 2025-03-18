@@ -38,8 +38,8 @@ const Card: React.FC<CardProps> = ({ ImgUrl, cardId }) => {
           src={ImgUrl} 
           alt="" 
           className='border-radius rounded-lg cursor-pointer' 
-          loading="lazy" 
-          onClick={handleCardClick} 
+          onClick={handleCardClick}
+          priority
         />
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} ImgUrl={ImgUrl} cardId={cardId} />
     </>
