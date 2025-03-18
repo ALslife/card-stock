@@ -7,6 +7,7 @@ interface ButtonProps {
   ricon?: string;
   licon?: string;
   onClick?: () => void; // onClickをオプショナルにする
+  disabled?: boolean;  // disabledプロパティを追加
 }
 
 const Button: React.FC<ButtonProps> = ({ label, ricon, licon, color, onClick }) => {

@@ -1,8 +1,7 @@
-// src/app/api/cards/update/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client"; // PrismaClientのインポート
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/auth-options";
 
 const prisma = new PrismaClient();
 
@@ -75,29 +74,47 @@ export async function POST(request: NextRequest) {
 
     console.log("Updated user card:", updatedUserCard); // デバッグ用
     return NextResponse.json(updatedUserCard);
-  } catch (error) {
+  } catch (error: unknown) {
     // エラーの詳細をログに出力
     console.error("Error updating user card data:", error);
-    
+
     // Prismaエラーの特定
     let statusCode = 500;
     let errorMessage = "Internal server error";
-    
-    if (error.code === 'P2003') {
-      statusCode = 404;
-      errorMessage = "Foreign key constraint failed: Check if the card or user exists";
-    } else if (error.code === 'P2002') {
-      statusCode = 409;
-      errorMessage = "Unique constraint violation";
+
+    // 型ガードを使ってerrorがPrismaClientKnownRequestError型であることを確認
+    if (isPrismaClientKnownRequestError(error)) {
+      if (error.code === 'P2003') {
+        statusCode = 404;
+        errorMessage = "Foreign key constraint failed: Check if the card or user exists";
+      } else if (error.code === 'P2002') {
+        statusCode = 409;
+        errorMessage = "Unique constraint violation";
+      }
+
+      return NextResponse.json(
+        {
+          error: errorMessage,
+          details: error.message, // 安全にアクセス
+          code: error.code || 'unknown',
+        },
+        { status: statusCode }
+      );
+    } else {
+      console.error("Unknown error:", error);
+      return NextResponse.json(
+        { 
+          error: "Unknown error", 
+          details: "An unexpected error occurred", 
+          code: 'unknown' 
+        },
+        { status: 500 }
+      );
     }
-    
-    return NextResponse.json(
-      { 
-        error: errorMessage, 
-        details: error.message,
-        code: error.code || 'unknown' 
-      }, 
-      { status: statusCode }
-    );
   }
+}
+
+// Prismaエラーの型ガード関数
+function isPrismaClientKnownRequestError(error: unknown): error is Prisma.PrismaClientKnownRequestError {
+  return (error as Prisma.PrismaClientKnownRequestError).code !== undefined;
 }

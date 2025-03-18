@@ -5,17 +5,16 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { cardId: string } }
+  context: { params: Promise<{ cardId: string }> }
 ) {
   try {
-    // paramsからcardIdを直接取得せず、まず変数にawaitして格納
-    const resolvedParams = await params;
-    const cardId = resolvedParams.cardId;
+    // paramsをawaitする
+    const { cardId } = await context.params;
     
     // URLからクエリパラメータを取得
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
-
+    
     if (!cardId) {
       return NextResponse.json({ message: "カードIDが必要です" }, { status: 400 });
     }
