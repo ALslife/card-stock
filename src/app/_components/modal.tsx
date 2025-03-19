@@ -8,17 +8,44 @@ interface ModalProps {
   onClose: () => void;
   ImgUrl: string;
   cardId: string;
+  initialBagQuantity?: number;
+  initialHeartQuantity?: number;
+  onQuantityUpdate?: (bagQuantity: number, heartQuantity: number) => void;
+  onFilterUpdate?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  ImgUrl,
+  cardId,
+  initialBagQuantity,
+  initialHeartQuantity,
+  onQuantityUpdate,
+  onFilterUpdate,
+}) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const parsedCardId = parseInt(cardId, 10) || 0;
-  const [bagQuantity, setBagQuantity] = useState<number>(0);
-  const [heartQuantity, setHeartQuantity] = useState<number>(0);
+  const [bagQuantity, setBagQuantity] = useState<number>(
+    initialBagQuantity || 0
+  );
+  const [heartQuantity, setHeartQuantity] = useState<number>(
+    initialHeartQuantity || 0
+  );
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Update local state when prop values change
+  useEffect(() => {
+    if (initialBagQuantity !== undefined) {
+      setBagQuantity(initialBagQuantity);
+    }
+    if (initialHeartQuantity !== undefined) {
+      setHeartQuantity(initialHeartQuantity);
+    }
+  }, [initialBagQuantity, initialHeartQuantity]);
 
   useEffect(() => {
     if (!isOpen || !userId || !parsedCardId) return;
@@ -66,6 +93,18 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
 
       if (!response.ok) throw new Error(`HTTPエラー: ${response.status}`);
       setSaveMessage("更新しました！");
+
+      // Notify the parent component about the updated quantities
+      if (onQuantityUpdate) {
+        onQuantityUpdate(bagQuantity, heartQuantity);
+      }
+
+      // フィルター更新処理 - modalを閉じる前に実行
+      const wasHeartRemoved = initialHeartQuantity && initialHeartQuantity > 0 && heartQuantity === 0;
+      if (wasHeartRemoved && onFilterUpdate) {
+        console.log("Heart was removed, triggering filter update");
+        onFilterUpdate(); // フィルタリングを再実行
+      }
 
       setTimeout(() => {
         onClose();
@@ -144,10 +183,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
         )}
         <Button
           label={isSaving ? "保存中..." : "変更"}
-          color={isSaving ? "bg-gray-400 text-white" : "bg-red-500 text-white"} // 文字色を白色に設定
+          color={isSaving ? "bg-gray-400 text-white" : "bg-red-500 text-white"}
           onClick={saveData}
           disabled={isSaving || isLoading}
-        />{" "}
+        />
       </div>
     </div>
   );

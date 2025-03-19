@@ -26,48 +26,42 @@ export async function GET(
       return NextResponse.json({ message: "無効なカードIDフォーマットです" }, { status: 400 });
     }
 
-    try {
-      const cardData = await prisma.card.findUnique({
-        where: {
-          id: cardIdNumber
-        }
-      });
-
-      if (!cardData) {
-        return NextResponse.json({ message: "カードが見つかりません" }, { status: 404 });
+    // カードデータを取得
+    const cardData = await prisma.card.findUnique({
+      where: {
+        id: cardIdNumber
       }
+    });
 
-      // ユーザー固有のデータを取得する場合、別のクエリで取得
-      let bagQuantity = 0;
-      let heartQuantity = 0;
-
-      if (userId) {
-        const userCardData = await prisma.userCard?.findFirst({
-          where: {
-            cardId: cardIdNumber,
-            userId: userId
-          }
-        });
-
-        if (userCardData) {
-          bagQuantity = userCardData.bagQuantity || 0;
-          heartQuantity = userCardData.heartQuantity || 0;
-        }
-      }
-
-      return NextResponse.json({
-        ...cardData,
-        bagQuantity,
-        heartQuantity,
-      });
-    } catch (dbError) {
-      const errorMessage = dbError ? dbError.toString() : "不明なデータベースエラー";
-      console.error("データベース操作エラー:", errorMessage);
-      return NextResponse.json({ message: "データベースエラー" }, { status: 500 });
+    if (!cardData) {
+      return NextResponse.json({ message: "カードが見つかりません" }, { status: 404 });
     }
+
+    // ユーザー固有のデータを取得する場合、別のクエリで取得
+    let bagQuantity = 0;
+    let heartQuantity = 0;
+
+    if (userId) {
+      const userCardData = await prisma.userCard.findFirst({
+        where: {
+          cardId: cardIdNumber,
+          userId: userId
+        }
+      });
+
+      if (userCardData) {
+        bagQuantity = userCardData.bagQuantity || 0;
+        heartQuantity = userCardData.heartQuantity || 0;
+      }
+    }
+
+    return NextResponse.json({
+      ...cardData,
+      bagQuantity,
+      heartQuantity,
+    });
   } catch (error) {
-    const errorMessage = error ? error.toString() : "不明なエラー";
-    console.error("カードデータの取得エラー:", errorMessage);
+    console.error("カードデータの取得エラー:", error);
     return NextResponse.json({ message: "サーバー内部エラー" }, { status: 500 });
   }
 }
