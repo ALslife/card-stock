@@ -90,7 +90,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
             width={1000}
             height={1000}
             alt=""
-            className="rounded-lg"
+            className="rounded-lg modal-image"
           />
         </div>
         {isLoading ? (
@@ -113,7 +113,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
                 <Image width={48} height={48} src={icon} alt="" />
                 <button
                   onClick={() => setValue(Math.max(0, value - 1))}
-                  className="flex align-center justify-center bg-black w-12 h-12 rounded-lg"
+                  className="flex items-center justify-center bg-black w-12 h-12 rounded-lg"
                 >
                   <Image width={24} height={24} src="/minus.svg" alt="" />
                 </button>
@@ -125,7 +125,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, ImgUrl, cardId }) => {
                 />
                 <button
                   onClick={() => setValue(value + 1)}
-                  className="flex align-center justify-center bg-black w-12 h-12 rounded-lg"
+                  className="flex items-center justify-center bg-black w-12 h-12 rounded-lg"
                 >
                   <Image width={24} height={24} src="/plus.svg" alt="" />
                 </button>

@@ -1,8 +1,7 @@
-"use client"; // クライアントコンポーネント
-
+// app/layout.tsx
 import "./globals.css";
 import Header from "./_components/header";
-import { SessionProvider } from "next-auth/react"; // ✅ 追加
+import { Providers } from "./providers";
 
 export default function RootLayout({
   children,
@@ -12,12 +11,12 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <SessionProvider> {/* ✅ 追加：これで useSession() が使用可能に */}
+        <Providers>
           <Header />
           <main className="pr-5 pl-5 pb-10 mr-auto ml-auto w-full max-w-[750px]">
             {children}
           </main>
-        </SessionProvider>
+        </Providers>
       </body>
     </html>
   );

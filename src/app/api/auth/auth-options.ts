@@ -1,9 +1,7 @@
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "@prisma/client";
 import { NextAuthOptions } from "next-auth";
-
 const prisma = new PrismaClient();
-
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -14,24 +12,24 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
   },
+  // セッション設定を追加
+  session: {
+    strategy: "jwt", // JWTを使用してセッションを管理
+    maxAge: 30 * 24 * 60 * 60, // 30日間セッションを維持（秒単位）
+  },
   callbacks: {
-    async signIn({ user, profile }) { // accountを削除
+    async signIn({ user, profile }) {
       try {
         if (!profile?.sub) {
           console.error("Google profile does not contain 'sub'.");
           return false;
         }
-
         const userId = profile.sub; // Googleの一意なIDを使用
-
         const existingUser = await prisma.user.findUnique({
           where: { id: userId },
         });
-
         if (!existingUser) {
-          // user.emailがnullまたはundefinedの場合の対処
           const email = user.email || ""; // デフォルトで空文字を設定
-
           await prisma.user.create({
             data: {
               id: userId,
@@ -41,16 +39,17 @@ export const authOptions: NextAuthOptions = {
             },
           });
           console.log(`Created new user: ${userId}`);
+        } else {
+          console.log(`User already exists: ${userId}`);
         }
-        return true;
+        return true; // 既存のユーザーでも新規作成してもtrueを返す
       } catch (error) {
         console.error("Error saving user to database:", error);
         return false;
       }
     },
-    async jwt({ token, account, user }) {
-      if (account && user) {
-        // GoogleのサブIDをtokenに設定
+    async jwt({ token, user }) {
+      if (user) {
         token.id = user.id; // もしuser.idがある場合、それを設定
       }
       return token;
@@ -62,7 +61,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // サインイン後にリダイレクトするURLの設定
       if (url === "/auth/signin") {
         return `${baseUrl}/search`;
       }
