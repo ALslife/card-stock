@@ -22,6 +22,7 @@ const select = ({ value, onChange }: { value: string; onChange: (e: React.Change
         <option value="OP-03">ブースターパック 強大な敵【OP-03】</option>
         <option value="OP-02">ブースターパック 頂上決戦【OP-02】</option>
         <option value="OP-01">ブースターパック ROMANCE DAWN【OP-01】</option>
+        <option value="ST-22">スタートデッキ エース&ニューゲート【ST-22】</option>
         <option value="ST-21">スタートデッキEX ギア5【ST-21】</option>
         <option value="ST-20">スタートデッキ 黄 シャーロット・カタクリ【ST-20】</option>
         <option value="ST-19">スタートデッキ 黒 スモーカー【ST-19】</option>
